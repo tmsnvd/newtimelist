@@ -5,6 +5,7 @@ php:
 
 before_script:
   - mysql -e 'create database newtimelist; use newtimelist;'
+  - ls -a
   - cd ./protected/tests
 
 script: phpunit --colors --coverage-text --exclude-group mssql,oci framework
