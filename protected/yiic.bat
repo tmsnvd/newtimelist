@@ -7,7 +7,7 @@ rem -------------------------------------------------------------
 
 @setlocal
 
-set BIN_PATH=%~dp0
+set BIN_PATH=D:\Library\php5.5
 
 if "%PHP_COMMAND%" == "" set PHP_COMMAND=php.exe
 
