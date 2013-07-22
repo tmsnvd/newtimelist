@@ -11,7 +11,7 @@ return CMap::mergeArray(
                 'connectionString' => 'mysql:host=localhost;dbname=newtimelist',
                 'emulatePrepare' => true,
                 'username' => 'travis',
-                'password' => 'dev',
+                'password' => '',
                 'charset' => 'utf8',
                 'enableProfiling' => true,
                 'enableParamLogging' => true
