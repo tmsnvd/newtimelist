@@ -5,6 +5,7 @@ php:
 
 before_script:
   - mysql -e 'create database newtimelist; use newtimelist;'
+  - mysql newtimelist < protected/data/newtimelist.sql
   - cd protected/tests/
 
 script: phpunit unit
