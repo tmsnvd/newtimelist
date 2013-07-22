@@ -9,3 +9,6 @@ before_script:
   - cd protected/tests/
 
 script: phpunit unit
+
+after_script:
+  - php vendor/bin/coveralls

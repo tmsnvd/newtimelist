@@ -1,8 +1,11 @@
 <phpunit bootstrap="bootstrap.php"
-		colors="true"
-		convertErrorsToExceptions="true"
-		convertNoticesToExceptions="true"
-		convertWarningsToExceptions="true"
-		stopOnFailure="false">
-
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false">
+    <logging>
+        <log type="coverage-clover" target="report/clover.xml"/>
+        <log type="junit" target="report/junit.xml" logIncompleteSkipped="false"/>
+    </logging>
 </phpunit>
