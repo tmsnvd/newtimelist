@@ -7,4 +7,4 @@ before_script:
   - mysql -e 'create database newtimelist; use newtimelist;'
   - cd protected/tests/
 
-script: phpunit unit --colors --coverage-text --exclude-group mssql,oci framework
+script: phpunit unit
