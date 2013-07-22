@@ -6,6 +6,5 @@
          stopOnFailure="false">
     <logging>
         <log type="coverage-clover" target="report/clover.xml"/>
-        <log type="junit" target="report/junit.xml" logIncompleteSkipped="false"/>
     </logging>
 </phpunit>
