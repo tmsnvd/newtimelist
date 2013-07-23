@@ -8,6 +8,7 @@ php:
 before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install --dev --no-progress --prefer-source
+  - pear channel-discover pear.phpunit.de
   - pear install phpunit/PHP_Invoker
   - phpenv rehash
   #- php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
