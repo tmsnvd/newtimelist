@@ -10,11 +10,21 @@ class EmployeeTest extends CDbTestCase
     );
 
     /**
-     * Test the TEST
+     * test table name
      */
-    public function testApprove()
+    public function testTableName()
     {
-        $this->assertTrue(TRUE);
+        $employee = new Employee;
+        $this->assertEquals('employee', $employee->tableName());
+    }
+
+    /**
+     * 
+     */
+    public function testRules()
+    {
+        $employee = new Employee;
+        $this->assertGreaterThan(0, count($employee->rules()));
     }
 
 
