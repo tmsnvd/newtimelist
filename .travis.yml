@@ -20,8 +20,7 @@ before_script:
   - mysql newtimelist < protected/data/newtimelist.sql
 
 script:
-  - mkdir -p build/logs
-  - phpunit --coverage-clover build/logs/clover.xml
+  - phpunit --coverage-clover protected/tests/report/clover.xml
 
 after_script:
   - php vendor/bin/coveralls -v
