@@ -1,31 +1,20 @@
 <?php
+
 /**
- * The base class for functional test cases.
- * In this class, we set the base URL for the test application.
- * We also provide some common methods to be used by concrete test classes.
+ * Class EmployeeTest
  */
 class EmployeeTest extends CDbTestCase
 {
-
     public $fixtures = array(
-        'employees' => 'Employee'
+        'employee' => 'Employee'
     );
 
     /**
-     * Sets up before each test method runs.
-     * This mainly sets the base URL for the test application.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
-     * CI test
+     * Test the TEST
      */
     public function testApprove()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(TRUE);
     }
 
 

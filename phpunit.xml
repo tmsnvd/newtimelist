@@ -1,0 +1,14 @@
+<phpunit bootstrap="protected/tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false">
+
+    <testsuites>
+        <testsuite name="NewTime">
+            <directory>protected/tests/unit/</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>

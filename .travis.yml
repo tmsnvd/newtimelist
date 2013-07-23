@@ -1,14 +1,20 @@
 language: php
+
 php:
-  - 5.2
+  - 5.3
+  - 5.4
   - 5.5
 
 before_script:
+  - wget http://getcomposer.org/composer.phar
+  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
+  - echo "extension = xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - mysql -e 'create database newtimelist; use newtimelist;'
   - mysql newtimelist < protected/data/newtimelist.sql
-  - cd protected/tests/
 
-script: phpunit unit
+script:
+  - mkdir -p build/logs
+  - phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
-  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls -v
