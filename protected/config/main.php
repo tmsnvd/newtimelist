@@ -87,7 +87,7 @@ return array(
             ),
         ),
         */
-        'log' => array(
+        'log' => array( /*
             'class' => 'CLogRouter',
             'routes' => array(
                 array(
@@ -95,7 +95,7 @@ return array(
                     'ipFilters' => array('127.0.0.1', '87.247.96.77'),
                 ),
             ),
-            /*
+            */
             'class' => 'CLogRouter',
             'routes' => array(
                 array(
@@ -107,8 +107,8 @@ return array(
                 array(
                     'class'=>'CWebLogRoute',
                 ),
-
-            ),*/
+*/
+            ),
         ),
     ),
     // application-level parameters that can be accessed

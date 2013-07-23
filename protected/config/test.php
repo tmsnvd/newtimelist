@@ -15,16 +15,16 @@ return CMap::mergeArray(
                 'charset' => 'utf8',
                 'enableProfiling' => true,
                 'enableParamLogging' => true
-            )
-        ),
-        'log' => array(
-            'class' => 'CLogRouter',
-            'routes' => array(
-                array(
-                    'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning',
-                ),
             ),
+            'log' => array(
+                'class' => 'CLogRouter',
+                'routes' => array(
+                    array(
+                        'class' => 'CFileLogRoute',
+                        'levels' => 'error, warning',
+                    )
+                )
+            )
         )
     )
 );

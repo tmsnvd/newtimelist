@@ -19,7 +19,7 @@ class EmployeeTest extends CDbTestCase
     }
 
     /**
-     * 
+     *
      */
     public function testRules()
     {

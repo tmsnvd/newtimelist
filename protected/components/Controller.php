@@ -48,7 +48,7 @@ class Controller extends CController
         $cs->registerCssFile($baseUrl . 'css/style.css');
         $cs->registerCssFile($baseUrl . 'css/themes.css');
 
-        //$cs->registerScriptFile($baseUrl . 'js/jquery.min.js');
+        $cs->registerScriptFile($baseUrl . 'js/jquery.min.js');
         $cs->registerScriptFile($baseUrl . 'js/bootstrap.min.js');
 
 
