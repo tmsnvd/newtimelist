@@ -27,5 +27,15 @@ class EmployeeTest extends CDbTestCase
         $this->assertGreaterThan(0, count($employee->rules()));
     }
 
+    /**
+     *
+     */
+    public function testAttributeLabels()
+    {
+        $employee = new Employee;
+        $this->assertGreaterThan(0, count($employee->attributeLabels()));
+    }
+
+
 
 }
