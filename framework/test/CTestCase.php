@@ -10,6 +10,7 @@
 
 require_once('PHPUnit/Runner/Version.php');
 require_once('PHPUnit/Util/Filesystem.php'); // workaround for PHPUnit <= 3.6.11
+require_once('PHPUnit/PHP/Invoker.php'); // workaround for PHPUnit <= 3.7 ??
 
 spl_autoload_unregister(array('YiiBase','autoload'));
 require_once('PHPUnit/Autoload.php');
