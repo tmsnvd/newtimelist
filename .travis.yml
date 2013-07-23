@@ -10,6 +10,8 @@ before_script:
   - php composer.phar install --dev --no-progress --prefer-source
   - pear channel-discover pear.phpunit.de
   - pear install phpunit/PHP_Invoker
+  - pear install phpunit/dbUnit
+  - pear install phpunit/PHPUnit_Story
   - phpenv rehash
   #- php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
   #- echo "zend_extension = Xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
