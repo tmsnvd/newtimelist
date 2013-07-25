@@ -31,7 +31,7 @@ class ProjectController extends Controller
                 'users' => array('admin'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update', 'invoice'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -58,7 +58,10 @@ class ProjectController extends Controller
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
-     * @param integer the ID of the model to be loaded
+     * @param $id
+     * @throws CHttpException
+     * @internal param \the $integer ID of the model to be loaded
+     * @return \CActiveRecord
      */
     public function loadModel($id)
     {
@@ -119,6 +122,7 @@ class ProjectController extends Controller
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
+     * @throws CHttpException
      */
     public function actionDelete($id)
     {
@@ -156,6 +160,22 @@ class ProjectController extends Controller
             'model' => $model,
         ));
     }
+
+    /**
+     * Manages all models.
+     */
+    public function actionInvoice()
+    {
+        $model = new Project('invoice');
+        $model->unsetAttributes(); // clear any default values
+        if (isset($_GET['Project']))
+            $model->attributes = $_GET['Project'];
+
+        $this->render('invoice', array(
+            'model' => $model,
+        ));
+    }
+
 
     /**
      * Performs the AJAX validation.

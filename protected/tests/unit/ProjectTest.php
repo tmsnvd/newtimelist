@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class EmployeeTest
+ * Class ProjectTest
  */
-class EmployeeTest extends CDbTestCase
+class ProjectTest extends PHPUnit_Framework_TestCase
 {
     public $fixtures = array(
-        'employee' => 'Employee'
+        'project' => 'Project'
     );
 
     /**
@@ -14,8 +14,8 @@ class EmployeeTest extends CDbTestCase
      */
     public function testTableName()
     {
-        $employee = new Employee;
-        $this->assertEquals('employee', $employee->tableName());
+        $employee = new Project;
+        $this->assertEquals('project', $employee->tableName());
     }
 
     /**
@@ -23,7 +23,7 @@ class EmployeeTest extends CDbTestCase
      */
     public function testRules()
     {
-        $employee = new Employee;
+        $employee = new Project;
         $this->assertGreaterThan(0, count($employee->rules()));
     }
 
@@ -32,7 +32,7 @@ class EmployeeTest extends CDbTestCase
      */
     public function testAttributeLabels()
     {
-        $employee = new Employee;
+        $employee = new Project;
         $this->assertGreaterThan(0, count($employee->attributeLabels()));
     }
 
@@ -41,9 +41,8 @@ class EmployeeTest extends CDbTestCase
      */
     public function testSearch()
     {
-        $employee = new Employee;
+        $employee = new Project;
         $this->assertInstanceOf('CActiveDataProvider', $employee->search());
     }
-
 
 }

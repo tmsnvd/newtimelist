@@ -16,8 +16,8 @@ before_script:
   - phpenv rehash
   #- php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
   #- echo "zend_extension = Xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - mysql -e 'create database newtimelist; use newtimelist;'
-  - mysql newtimelist < protected/data/newtimelist.sql
+  - mysql -e 'create database newtimelist_test; use newtimelist_test;'
+  - mysql newtimelist_test < protected/data/newtimelist.sql
 
 script:
   - phpunit --coverage-clover protected/tests/report/clover.xml

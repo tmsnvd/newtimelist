@@ -94,8 +94,6 @@ class Project extends CActiveRecord
      */
     public function search()
     {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
@@ -108,6 +106,20 @@ class Project extends CActiveRecord
         $criteria->compare('project_end', $this->project_end, true);
         $criteria->compare('status_id', $this->status_id);
         $criteria->compare('is_checkout', $this->is_checkout);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    /**
+     * Check unpaid projects
+     * @return CActiveDataProvider
+     */
+    public function invoice()
+    {
+        $criteria = new CDbCriteria;
+        $criteria->compare('is_checkout', 0);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -4,13 +4,19 @@
  * - $this: the BootCrudCode object
  */
 ?>
-<div class="box box-bordered">
+<div class="box box-color box-bordered">
     <div class="box-title">
         <h3>
             <i class="icon-table"></i>
-            <?php echo $this->pluralize($this->class2name($this->modelClass)); ?>
-            <?php echo "<?php echo Yii::t('admin', '__-'), ' ', Yii::t('admin', 'sąrašas');"; ?></h3>
+            <?php $namep = $this->pluralize($this->class2name($this->modelClass));
+            $name = $this->modelClass;
+            echo "<?php echo Yii::t('admin', '$namep'), ' ', Yii::t('admin', 'sąrašas');?>"; ?>
         </h3>
+        <div class="actions">
+            <a href="<?php echo"<?php echo CHtml::normalizeUrl(array('$name/create')); ?>"; ?>" class="btn btn-small"
+               rel="tooltip" data-original-title="<?php echo"<?php echo Yii::t('admin', 'Sukurti'); ?>"; ?>"><i
+                    class="icon-plus"></i> <?php echo"<?php echo Yii::t('admin', 'Naujas'); ?>"; ?></a>
+        </div>
     </div>
 
 <?php
@@ -57,19 +63,20 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 </div><!-- search-form -->
 
 <?php echo "<?php"; ?> $this->widget('bootstrap.widgets.TbGridView',array(
-	'id'=>'<?php echo $this->class2id($this->modelClass); ?>-grid',
-    'template' => '<div id="table" class="table table-hover table-nomargin" role="grid">{items}{summary}{pager}</div>',
+    'template' => '<div class="">{items}{summary}{pager}</div>',
     'dataProvider'=>$model->search(),
     'filter'=>$model,
     'filterCssClass' => 'thefilter',
     'summaryCssClass' => 'dataTables_info',
+    'summaryCssClass' => 'table-pagination',
     'pagerCssClass' => 'table-pagination',
     'pager' => array('class' => 'bootstrap.widgets.TbPager', 'header' => ''),
-    'summaryText' => 'Showing <span>{start}</span> - <span>{end}</span> of <span>{count}</span> entries',
+    'summaryText' => Yii::t('admin', 'Rodomi įrašai:  <span>{start}</span> - <span>{end}</span> iš <span>{count}</span>'),
     'htmlOptions' => array(
-    'class' => 'box-content nopadding',
+        'class' => 'box-content nopadding',
     ),
     'itemsCssClass' => 'table table-hover table-nomargin table-bordered dataTable-columnfilter dataTable',
+    'id' => '<?php echo $this->class2id($this->modelClass); ?>-grid',
 	'columns'=> array(
 <?php
 $count=0;
@@ -116,7 +123,7 @@ if($count>=7)
 ?>
         array(
             'class'=>'bootstrap.widgets.TbButtonColumn',
-            'header' => 'Actions',
+            'header' => Yii::t('admin', 'Veiksmai'),
             'viewButtonIcon' => false
         ),
 	),

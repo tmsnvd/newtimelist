@@ -4,12 +4,11 @@
  * - $this: the BootCrudCode object
  */
 ?>
+
 <?php echo "<?php \$form=\$this->beginWidget('bootstrap.widgets.TbActiveForm',array(
 	'id'=>'".$this->class2id($this->modelClass)."-form',
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
 )); ?>\n"; ?>
-
-	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>
 
@@ -25,10 +24,11 @@ foreach($this->tableSchema->columns as $column)
 }
 ?>
 	<div class="form-actions">
+        <p class="help-block"><?php echo"<?php echo Yii::t('main', 'Privalomi laukai pažymėti žvaigždute *'); ?>"; ?></p>
 		<?php echo "<?php \$this->widget('bootstrap.widgets.TbButton', array(
-			'buttonType'=>'submit',
-			'type'=>'primary',
-			'label'=>\$model->isNewRecord ? 'Create' : 'Save',
+			'buttonType' => 'submit',
+			'type' => 'primary',
+			'label' => \$model->isNewRecord ? Yii::t('admin', 'Sukurti') : Yii::t('admin', 'Išsaugoti'),
 		)); ?>\n"; ?>
 	</div>
 

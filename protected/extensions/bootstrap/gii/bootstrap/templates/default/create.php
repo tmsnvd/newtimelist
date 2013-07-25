@@ -8,8 +8,8 @@
 echo "<?php\n";
 $label=$this->pluralize($this->class2name($this->modelClass));
 echo "\$this->breadcrumbs=array(
-	'$label'=>array('admin'),
-	'Create' => array()
+	Yii::t('admin', '$label') => array('admin'),
+	Yii::t('admin', 'Kurti')
 );\n";
 ?>
 
@@ -25,7 +25,7 @@ $this->menu=array(
     <div class="box-title">
         <h3><i class="icon-th-list"></i> <?php echo $this->modelClass; ?></h3>
     </div>
-    <div class="box-content nopadding">
+    <div class="box-content">
     <?php echo "<?php echo \$this->renderPartial('_form', array('model'=>\$model)); ?>"; ?>
     </div>
 </div>

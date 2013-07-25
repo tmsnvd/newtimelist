@@ -45,7 +45,9 @@ return array(
         'user' => array(
             // enable cookie-based authentication
             'class' => 'WebUser',
-            'allowAutoLogin' => true
+            'allowAutoLogin' => true,
+            'autoRenewCookie' => true,
+            'authTimeout' => 60 * 60 * 8
         ),
         'bootstrap' => array(
             'class' => 'bootstrap.components.Bootstrap',
@@ -105,9 +107,9 @@ return array(
                 // uncomment the following to show log messages on web pages
                 /*
                 array(
-                    'class'=>'CWebLogRoute',
+                    //'class' => 'CWebLogRoute',
                 ),
-*/
+                */
             ),
         ),
     ),

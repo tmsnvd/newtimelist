@@ -47,13 +47,21 @@ class Controller extends CController
         $cs->registerCssFile($baseUrl . 'css/bootstrap-responsive.min.css');
         $cs->registerCssFile($baseUrl . 'css/style.css');
         $cs->registerCssFile($baseUrl . 'css/themes.css');
+        $cs->registerCssFile($baseUrl . 'css/customized.css');
 
-        $cs->registerScriptFile($baseUrl . 'js/jquery.min.js');
+        $cs->registerCoreScript('jquery');
+
+        #$cs->registerScriptFile($baseUrl . '/js/jquery-1.8.3.min.js');
+        $cs->registerScriptFile($baseUrl . 'js/jquery-migrate-1.2.1.min.js');
         $cs->registerScriptFile($baseUrl . 'js/bootstrap.min.js');
 
+        $cs->registerScriptFile($baseUrl . 'js/ipad.js');
 
         switch ($action->getId())
         {
+            case "index":
+            case "login":
+            case "invoice":
             case "admin":
 
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.core.min.js');
@@ -89,8 +97,9 @@ class Controller extends CController
         }
 
 
+        $cs->registerScriptFile($baseUrl . 'js/ipad.js');
+        $cs->registerScriptFile($baseUrl . 'js/application.js');
         $cs->registerScriptFile($baseUrl . 'js/eakroko.js');
-        $cs->registerScriptFile($baseUrl . 'js/application.min.js');
 
         return true;
     }

@@ -223,3 +223,5 @@ font/
 images/
 img/
 js/
+vendor/
+testdb/

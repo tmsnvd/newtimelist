@@ -8,10 +8,10 @@ return CMap::mergeArray(
                 'class' => 'system.test.CDbFixtureManager',
             ),
             'db' => array(
-                'connectionString' => 'mysql:host=localhost;dbname=newtimelist',
+                'connectionString' => 'mysql:host=localhost;dbname=newtimelist_test',
                 'emulatePrepare' => true,
-                'username' => 'travis',
-                'password' => '',
+                'username' => 'dev',
+                'password' => 'dev',
                 'charset' => 'utf8',
                 'enableProfiling' => true,
                 'enableParamLogging' => true

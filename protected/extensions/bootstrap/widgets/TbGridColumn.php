@@ -58,8 +58,9 @@ class TbGridColumn extends CDataColumn
             {
                 $class = isset($this->filterInputHtmlOptions['input_class']) ? $this->filterInputHtmlOptions['input_class'] : "";
                 $id = isset($this->filterInputHtmlOptions['input_id']) ? $this->filterInputHtmlOptions['input_id'] : "";
+                $readonly = isset($this->filterInputHtmlOptions['readonly']) ? 1 : 0;
 
-                echo CHtml::activeTextField($this->grid->filter, $this->name, array('id' => $id, 'class' => 'text_filter search_init ' . $class ));
+                echo CHtml::activeTextField($this->grid->filter, $this->name, array('id' => $id, 'class' => 'text_filter search_init ' . $class, 'readonly' => $readonly ));
             }
         } else
             parent::renderFilterCellContent();

@@ -1,6 +1,6 @@
 <?php
 
-class MaterialController extends Controller
+class JobNameController extends Controller
 {
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -61,14 +61,14 @@ class MaterialController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Material;
+        $model = new JobName;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['Material']))
+        if (isset($_POST['JobName']))
         {
-            $model->attributes = $_POST['Material'];
+            $model->attributes = $_POST['JobName'];
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
@@ -90,9 +90,9 @@ class MaterialController extends Controller
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['Material']))
+        if (isset($_POST['JobName']))
         {
-            $model->attributes = $_POST['Material'];
+            $model->attributes = $_POST['JobName'];
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
@@ -126,7 +126,7 @@ class MaterialController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new CActiveDataProvider('Material');
+        $dataProvider = new CActiveDataProvider('JobName');
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -137,10 +137,10 @@ class MaterialController extends Controller
      */
     public function actionAdmin()
     {
-        $model = new Material('search');
+        $model = new JobName('search');
         $model->unsetAttributes(); // clear any default values
-        if (isset($_GET['Material']))
-            $model->attributes = $_GET['Material'];
+        if (isset($_GET['JobName']))
+            $model->attributes = $_GET['JobName'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -154,7 +154,7 @@ class MaterialController extends Controller
      */
     public function loadModel($id)
     {
-        $model = Material::model()->findByPk($id);
+        $model = JobName::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -166,7 +166,7 @@ class MaterialController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'material-form')
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'job-name-form')
         {
             echo CActiveForm::validate($model);
             Yii::app()->end();

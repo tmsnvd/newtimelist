@@ -72,7 +72,12 @@ class TbButtonColumn extends CButtonColumn
 		if (!isset($options['rel']))
 			$options['rel'] = 'tooltip';
 
-		if (isset($button['icon']))
+        if ($id == "delete")
+        {
+           // var_dump($id, $button, $row, $data);
+            echo CHtml::link('<i class="icon-'.$button['icon'].'"></i>', $url, $options);
+        }
+		else if (isset($button['icon']))
 		{
 			if (strpos($button['icon'], 'icon') === false)
 				$button['icon'] = 'icon-'.implode(' icon-', explode(' ', $button['icon']));
