@@ -73,6 +73,8 @@ class MonthController extends Controller
                 $this->redirect(array('view', 'id' => $model->id));
         }
 
+        $model->year = date("Y");
+
         $this->render('create', array(
             'model' => $model,
         ));

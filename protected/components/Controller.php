@@ -85,6 +85,8 @@ class Controller extends CController
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.datepicker.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'datepicker/bootstrap-datepicker.js');
                 $cs->registerScriptFile($baseUrl . $js . 'datepicker/locales/bootstrap-datepicker.lt.js');
+                $cs->registerScriptFile($baseUrl . $js . 'daterangepicker/moment.min.js');
+                $cs->registerScriptFile($baseUrl . $js . 'daterangepicker/daterangepicker.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.widget.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.mouse.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.sortable.min.js');
@@ -92,6 +94,7 @@ class Controller extends CController
                 $cs->registerScriptFile($baseUrl . $js . 'nicescroll/jquery.nicescroll.min.js');
 
                 $cs->registerCssFile($baseUrl . $css . 'datepicker/datepicker.css');
+                $cs->registerCssFile($baseUrl . $css . 'daterangepicker/daterangepicker.css');
 
                 break;
         }
