@@ -1,7 +1,40 @@
 <?php
 
-class SiteTest extends WebTestCase
+require_once __DIR__ . '../../../vendor/facebook/webdriver/lib/__init__.php';
+define('TEST_BASE_URL', 'http://185.5.54.28/time');
+
+/**
+ * Class SiteTest
+ */
+class SiteTest extends CWebTestCase
 {
+
+    protected $_session;
+
+    /**
+     * up
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setBrowserUrl(TEST_BASE_URL);
+
+        $this->prepareTestSession();
+        $web_driver = new WebDriver();
+
+        $this->_session = $web_driver->session('chrome');
+    }
+
+    /**
+     * and down
+     */
+    public function tearDown()
+    {
+        $this->_session->close();
+        unset($this->_session);
+        parent::tearDown();
+    }
+
     public function testIndex()
     {
         $this->open('');

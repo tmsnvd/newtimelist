@@ -52,10 +52,11 @@ class TbBreadcrumbs extends CBreadcrumbs
         } else if ($this->homeLink !== false)
             $links[] = $this->renderItem($this->homeLink);
 
+        //print_R($this->links );
 
         foreach ($this->links as $label => $url)
         {
-            if (is_string($label) || is_array($url) && empty($url))
+            if (is_string($label) || is_array($url))
             {
                 $content = CHtml::link($this->encodeLabel ? CHtml::encode($label) : $label, $url);
                 $links[] = $this->renderItem($content);
@@ -63,7 +64,7 @@ class TbBreadcrumbs extends CBreadcrumbs
             else
             {
                 $content = CHtml::link($label);
-                $links[] = $this->renderItem($content, true);
+                $links[] = '<li class="active"><span>' . $url  . '</span></li>';
             }
         }
 

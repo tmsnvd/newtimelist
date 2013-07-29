@@ -1,23 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "month".
+ * This is the model class for table "job_name".
  *
- * The followings are the available columns in table 'month':
+ * The followings are the available columns in table 'job_name':
  * @property integer $id
- * @property integer $year
- * @property string $start
- * @property string $end
- * @property integer $week
+ * @property string $title_lt
+ * @property string $title_no
  */
-class Month extends CActiveRecord
+class JobName extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'month';
+		return 'job_name';
 	}
 
 	/**
@@ -28,11 +26,11 @@ class Month extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('year, start, end, week', 'required'),
-			array('year, week', 'numerical', 'integerOnly'=>true),
+			array('title_lt, title_no', 'required'),
+			array('title_lt, title_no', 'length', 'max'=>1024),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, year, start, end, week', 'safe', 'on'=>'search'),
+			array('id, title_lt, title_no', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,10 +52,8 @@ class Month extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'year' => 'Year',
-			'start' => 'Start',
-			'end' => 'End',
-			'week' => 'Week',
+			'title_lt' => Yii::t('admin', 'Pavadinimas') . ' ' . Yii::t('admin', '(LT)'),
+			'title_no' => Yii::t('admin', 'Pavadinimas') . ' ' . Yii::t('admin', '(NO)'),
 		);
 	}
 
@@ -80,10 +76,8 @@ class Month extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('year',$this->year);
-		$criteria->compare('start',$this->start,true);
-		$criteria->compare('end',$this->end,true);
-		$criteria->compare('week',$this->week);
+		$criteria->compare('title_lt',$this->title_lt,true);
+		$criteria->compare('title_no',$this->title_no,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -94,7 +88,7 @@ class Month extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Month the static model class
+	 * @return JobName the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

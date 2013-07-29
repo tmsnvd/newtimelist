@@ -47,7 +47,8 @@ return array(
             'class' => 'WebUser',
             'allowAutoLogin' => true,
             'autoRenewCookie' => true,
-            'authTimeout' => 60 * 60 * 8
+            'authTimeout' => 60 * 60 * 1,
+            'absoluteAuthTimeout' => 60 * 60 * 12
         ),
         'bootstrap' => array(
             'class' => 'bootstrap.components.Bootstrap',
@@ -88,30 +89,30 @@ return array(
                 'giix' => 'ext.giix.messages', // giix messages directory.
             ),
         ),
-        */
-        'log' => array( /*
+
+        'log' => array(
             'class' => 'CLogRouter',
             'routes' => array(
                 array(
                     'class' => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
                     'ipFilters' => array('127.0.0.1', '87.247.96.77'),
                 ),
-            ),
-            */
-            'class' => 'CLogRouter',
-            'routes' => array(
-                array(
-                    'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning',
                 ),
-                // uncomment the following to show log messages on web pages
-                /*
-                array(
-                    //'class' => 'CWebLogRoute',
-                ),
-                */
-            ),
+
+               'class' => 'CLogRouter',
+               'routes' => array(
+                   array(
+                       'class' => 'CFileLogRoute',
+                       'levels' => 'error, warning',
+                   ),*/
+        // uncomment the following to show log messages on web pages
+        /*
+        array(
+            //'class' => 'CWebLogRoute',
         ),
+
+    ),
+),  */
     ),
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']

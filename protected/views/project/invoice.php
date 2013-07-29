@@ -3,11 +3,7 @@
         <h3><i class="glyphicon-spade"></i><?php echo Yii::t('admin', 'Projektų'), ' ', Yii::t('admin', 'sąrašas'); ?>
         </h3>
 
-        <div class="actions">
-            <a href="<?php echo CHtml::normalizeUrl(array('project/create')); ?>" class="btn btn-small"
-               rel="tooltip" data-original-title="<?php echo Yii::t('admin', 'Sukurti'); ?>"><i
-                    class="icon-plus"></i> <?php echo Yii::t('admin', 'Naujas'); ?></a>
-        </div>
+
     </div>
     <?php
 
@@ -20,7 +16,7 @@
 
     $this->breadcrumbs = array(
         Yii::t('admin', 'Projektai') => array('index'),
-        Yii::t('admin', 'Valdyti'),
+        Yii::t('admin', 'Sąrašas'),
     );
     /*
     $this->menu = array(

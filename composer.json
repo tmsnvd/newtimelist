@@ -1,5 +1,5 @@
 {
-    "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+    "require": {
+        "facebook/webdriver": "dev-master"
     }
 }

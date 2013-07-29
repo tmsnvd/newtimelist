@@ -38,14 +38,19 @@ class UserIdentity extends CUserIdentity
         else
         {
             $this->_id = $record->usertype;
-            $this->setState('title', $record['username']);
             $this->errorCode = self::ERROR_NONE;
 
+            $this->setState('__name', $record->usertype);
+            $this->setState('title', $record->name);
         }
 
         return !$this->errorCode;
     }
 
+
+    /**
+     * @return mixed|string
+     */
     public function getId() //  override Id
     {
         return $this->_id;
