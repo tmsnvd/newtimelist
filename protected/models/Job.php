@@ -36,9 +36,9 @@ class Job extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('title, created, work_hour, project_id, employee_id', 'required'),
-            array('work_hour, travel_time, parking_cost, project_id, employee_id', 'numerical', 'integerOnly' => true),
-            array('title', 'length', 'max' => 1024),
+            array('created, project_id, employee_id', 'required'),
+            array('parking_cost, project_id, employee_id', 'numerical', 'integerOnly' => true),
+            //array('title', 'length', 'max' => 1024),
             array('comment', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -56,6 +56,22 @@ class Job extends CActiveRecord
         return array(
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
             'employee' => array(self::BELONGS_TO, 'Employee', 'employee_id'),
+            'jobNames' => array(self::MANY_MANY, 'JobName', 'job_to_job_name(job_id, job_name_id)'),
+            'materials' => array(self::MANY_MANY, 'Material', 'job_to_job_name(job_id, material_id)'),
+            'extraJobs' => array(self::MANY_MANY, 'ExtraJob', 'job_to_job_name(job_id, extra_job_id)')
+        );
+    }
+
+    /**
+     * Added custom behavior for MANY_MANY handling
+     * @return array
+     *
+     */
+    public function behaviors()
+    {
+        return array(
+            'CAdvancedArBehavior' => array('class' => 'application.extensions.CAdvancedArBehavior'),
+            'datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior')
         );
     }
 
@@ -66,9 +82,10 @@ class Job extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'title' => 'Pavadinimas',
-            'created' => 'Sukurtas',
-            'work_hour' => 'Darbo laikas',
+            'bonus' => 'Bonusas',
+            'created' => 'Atlikimo data',
+            'work_start' => 'Darbo pradžia',
+            'work_end' => 'Darbo pabaiga',
             'travel_time' => 'Kelionės laikas',
             'parking_cost' => 'Parkavimo išlaidos',
             'comment' => 'Komentaras',
@@ -96,18 +113,53 @@ class Job extends CActiveRecord
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('title', $this->title, true);
+        //$criteria->compare('title', $this->title, true);
         $criteria->compare('created', $this->created, true);
-        $criteria->compare('work_hour', $this->work_hour);
+        //$criteria->compare('work_hour', $this->work_hour);
         $criteria->compare('travel_time', $this->travel_time);
         $criteria->compare('parking_cost', $this->parking_cost);
         $criteria->compare('comment', $this->comment, true);
         $criteria->compare('project_id', $this->project_id);
-        $criteria->compare('employee_id', $this->employee_id);
+
+        if (Yii::app()->user->getId() !== "admin")
+            $criteria->compare('employee_id', (int)Yii::app()->user->getState("id"));
+        else
+            $criteria->compare('employee_id', $this->employee_id);
+
+        $size = Yii::app()->user->getState('grid');
+        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 10;
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => array('pageSize' => $size),
         ));
+    }
+
+    /***
+     * Add jobName to job
+     * @param $job
+     */
+    public function setJobNames($job)
+    {
+        $this->jobNames = $job;
+    }
+
+    /***
+     * Add jobName to job
+     * @param $mat
+     */
+    public function setMaterials($mat)
+    {
+        $this->materials = $mat;
+    }
+
+    /***
+     * Add jobName to job
+     * @param $ext
+     */
+    public function setExtraJobs($ext)
+    {
+        $this->extraJobs = $ext;
     }
 
     /**

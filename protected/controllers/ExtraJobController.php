@@ -15,7 +15,7 @@ class ExtraJobController extends Controller
     {
         return array(
             'accessControl', // perform access control for CRUD operations
-            'postOnly + delete',
+            //'postOnly + delete',
         );
     }
 
@@ -36,7 +36,7 @@ class ExtraJobController extends Controller
                 'users' => array('admin'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin', 'delete', 'ajaxGetUnit'),
                 'users' => array('admin'),
             ),
             array('deny', // deny all users
@@ -65,13 +65,13 @@ class ExtraJobController extends Controller
         $model = new ExtraJob;
 
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $this->performAjaxValidation($model);
 
         if (isset($_POST['ExtraJob']))
         {
             $model->attributes = $_POST['ExtraJob'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('create', array(
@@ -89,13 +89,13 @@ class ExtraJobController extends Controller
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $this->performAjaxValidation($model);
 
         if (isset($_POST['ExtraJob']))
         {
             $model->attributes = $_POST['ExtraJob'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('update', array(
@@ -111,7 +111,7 @@ class ExtraJobController extends Controller
      */
     public function actionDelete($id)
     {
-        if (Yii::app()->request->isPostRequest)
+        //if (Yii::app()->request->isPostRequest)
         {
             // we only allow deletion via POST request
             $this->loadModel($id)->delete();
@@ -119,8 +119,8 @@ class ExtraJobController extends Controller
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-        } else
-            throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+        } //else
+            //throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
     /**
@@ -158,7 +158,7 @@ class ExtraJobController extends Controller
     {
         $model = ExtraJob::model()->findByPk($id);
         if ($model === null)
-            throw new CHttpException(404, 'The requested page does not exist.');
+            throw new CHttpException(404, 'Užklausa negali būti įvykdyta');
         return $model;
     }
 
@@ -174,4 +174,23 @@ class ExtraJobController extends Controller
             Yii::app()->end();
         }
     }
+
+    /**
+     *
+     */
+    public function actionAjaxGetUnit()
+    {
+        $id = Yii::app()->request->getPost("id", 0);
+        $model = $this->loadModel($id);
+
+        if($model)
+        {
+            echo $model->unit;
+        }
+        else
+            echo "";
+
+        Yii::app()->end();
+    }
+
 }

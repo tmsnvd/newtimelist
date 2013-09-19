@@ -42,6 +42,23 @@ class UserIdentity extends CUserIdentity
 
             $this->setState('__name', $record->usertype);
             $this->setState('title', $record->name);
+            $this->setState('id', $record->id);
+
+            $settings = Setting::model()->findAll('employee_id=:eid', array(':eid' => $record->id));
+            $grid = array();
+
+            foreach($settings as $s)
+            {
+                $grid[$s->title] = $s->value;
+            }
+            $this->setState('grid', $grid);
+            Yii::app()->user->setState('_timeZone', 'Europe/Vilnius');
+
+            //Yii::app()->localtime->Locale = 'lt_lt'; // eg 'en_gb'
+            //Yii::app()->localtime->TimeZone = 'Europe/Vilnius'; //$user->timezone->name;
+            //Yii::app()->localtime->dateFormat = 'long'; //$user->timezone->name;
+
+
         }
 
         return !$this->errorCode;

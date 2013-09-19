@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'month':
  * @property integer $id
  * @property integer $year
+ * @property integer $month
  * @property string $start
  * @property string $end
  * @property integer $week
@@ -28,11 +29,11 @@ class Month extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('year, start, end, week', 'required'),
-            array('year, week', 'numerical', 'integerOnly' => true),
+            array('year, month, start, end, week', 'required'),
+            array('year, month, week', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, year, start, end, week', 'safe', 'on' => 'search'),
+            array('id, year, month, start, end, week', 'safe', 'on' => 'search'),
         );
     }
 
@@ -53,10 +54,11 @@ class Month extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'year' => Yii::t('admin', 'Metai'),
-            'start' => Yii::t('admin', 'Pradžia'),
-            'end' => Yii::t('admin', 'Pabaiga'),
-            'week' => Yii::t('admin', 'Savaitė'),
+            'year' => 'Metai',
+            'month' => 'Mėnuo',
+            'start' => 'Pradžia',
+            'end' => 'Pabaiga',
+            'week' => 'Savaitė',
         );
     }
 
@@ -80,12 +82,39 @@ class Month extends CActiveRecord
 
         $criteria->compare('id', $this->id);
         $criteria->compare('year', $this->year);
+        $criteria->compare('month', $this->month);
         $criteria->compare('start', $this->start, true);
         $criteria->compare('end', $this->end, true);
         $criteria->compare('week', $this->week);
 
+        $criteria->order = 'year, month, week';
+
+        $size = Yii::app()->user->getState('grid');
+        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 10;
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => array('pageSize' => $size),
+        ));
+    }
+
+    /**
+     *
+     */
+    public function work()
+    {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('year', $this->year);
+        $criteria->compare('month', $this->month);
+        $criteria->compare('start', '>=' . $this->start, false);
+        $criteria->compare('end', '<=' . $this->end, false);
+        $criteria->compare('week', $this->week);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array('pageSize' => 500),
         ));
     }
 

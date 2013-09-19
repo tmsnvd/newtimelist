@@ -62,6 +62,7 @@ class EmployeeController extends Controller
     public function actionCreate()
     {
         $model = new Employee;
+        $model->setScenario('create');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -73,7 +74,6 @@ class EmployeeController extends Controller
 
             if ($model->save())
                 $this->redirect(array('admin'));
-
         }
 
         $this->render('create', array(
@@ -95,9 +95,11 @@ class EmployeeController extends Controller
 
         if (isset($_POST['Employee']))
         {
+
             $model->attributes = $_POST['Employee'];
 
-            unset($_POST['Employee']['password']);
+            if ($model->password = !'')
+                $model->password = CPasswordHelper::hashPassword($model->password, 4);
 
             if ($model->save())
                 $this->redirect(array('admin'));
@@ -112,14 +114,20 @@ class EmployeeController extends Controller
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
+     * @throws CHttpException
      */
     public function actionDelete($id)
     {
-        $this->loadModel($id)->delete();
+        //if (Yii::app()->request->isPostRequest)
+        {
+            // we only allow deletion via POST request
+            $this->loadModel($id)->delete();
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if (!isset($_GET['ajax']))
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        } //else
+        //throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
     /**
@@ -148,9 +156,10 @@ class EmployeeController extends Controller
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return Employee the loaded model
+     * @param $id
      * @throws CHttpException
+     * @return \CActiveRecord
+     * @internal param \the $integer ID of the model to be loaded
      */
     public function loadModel($id)
     {
@@ -162,7 +171,7 @@ class EmployeeController extends Controller
 
     /**
      * Performs the AJAX validation.
-     * @param Employee $model the model to be validated
+     * @param CModel the model to be validated
      */
     protected function performAjaxValidation($model)
     {

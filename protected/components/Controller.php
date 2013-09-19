@@ -55,19 +55,18 @@ class Controller extends CController
         $cs->registerScriptFile($baseUrl . 'js/jquery-migrate-1.2.1.min.js');
         $cs->registerScriptFile($baseUrl . 'js/bootstrap.min.js');
 
-        $cs->registerScriptFile($baseUrl . 'js/ipad.js');
-
         switch ($action->getId())
         {
             case "index":
             case "login":
             case "invoice":
             case "admin":
+            case "outlay":
 
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.core.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.datepicker.min.js');
+                $cs->registerScriptFile($baseUrl . $js . 'datepicker/locales/bootstrap-datepicker.' . Yii::app()->language . '.js');
                 $cs->registerScriptFile($baseUrl . $js . 'datepicker/bootstrap-datepicker.js');
-                $cs->registerScriptFile($baseUrl . $js . 'datepicker/locales/bootstrap-datepicker.lt.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.widget.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.mouse.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.sortable.min.js');
@@ -75,6 +74,22 @@ class Controller extends CController
                 $cs->registerScriptFile($baseUrl . $js . 'nicescroll/jquery.nicescroll.min.js');
 
                 $cs->registerCssFile($baseUrl . $css . 'datepicker/datepicker.css');
+
+                if (Yii::app()->user->hasFlash('success'))
+                {
+                    $cs->registerScriptFile($baseUrl . $js . 'gritter/jquery.gritter.min.js');
+                    $cs->registerCssFile($baseUrl . $css . 'gritter/jquery.gritter.css');
+
+                    $script = '
+                    $.gritter.add({
+                        title: "' . Yii::t('admin', 'NewTime') . '",
+                        text: "' . Yii::app()->user->getFlash('success') . '",
+                        time: 2000,
+                    });
+                    ';
+
+                    Yii::app()->clientScript->registerScript('someId', $script);
+                }
 
                 break;
 
@@ -84,7 +99,7 @@ class Controller extends CController
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.core.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.datepicker.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'datepicker/bootstrap-datepicker.js');
-                $cs->registerScriptFile($baseUrl . $js . 'datepicker/locales/bootstrap-datepicker.lt.js');
+                $cs->registerScriptFile($baseUrl . $js . 'datepicker/locales/bootstrap-datepicker.' . Yii::app()->language . '.js');
                 $cs->registerScriptFile($baseUrl . $js . 'daterangepicker/moment.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'daterangepicker/daterangepicker.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.widget.min.js');
@@ -99,6 +114,9 @@ class Controller extends CController
                 break;
         }
 
+
+        $cs->registerCssFile($baseUrl . '/css/plugins/timepicker/bootstrap-timepicker.min.css');
+        $cs->registerScriptFile($baseUrl . '/js/plugins/timepicker/bootstrap-timepicker.min.js');
 
         $cs->registerScriptFile($baseUrl . 'js/ipad.js');
         $cs->registerScriptFile($baseUrl . 'js/application.js');

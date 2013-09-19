@@ -1,25 +1,22 @@
 <?php
 
 /**
- * This is the model class for table "status".
+ * This is the model class for table "setting".
  *
- * The followings are the available columns in table 'status':
+ * The followings are the available columns in table 'setting':
  * @property integer $id
- * @property string $title_lt
- * @property string $title_no
- * @property integer $language_id
- *
- * The followings are the available model relations:
- * @property Project[] $projects
+ * @property string $title
+ * @property string $value
+ * @property integer $employee_id
  */
-class Status extends CActiveRecord
+class Setting extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'status';
+		return 'setting';
 	}
 
 	/**
@@ -30,12 +27,12 @@ class Status extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title_lt, title_no, language_id', 'required'),
-			array('language_id', 'numerical', 'integerOnly'=>true),
-			array('title_lt, title_no', 'length', 'max'=>1024),
+			array('title, value, employee_id', 'required'),
+			array('employee_id', 'numerical', 'integerOnly'=>true),
+			array('title, value', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title_lt, title_no, language_id', 'safe', 'on'=>'search'),
+			array('id, title, value, employee_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -47,7 +44,6 @@ class Status extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'projects' => array(self::HAS_MANY, 'Project', 'status_id'),
 		);
 	}
 
@@ -58,9 +54,9 @@ class Status extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-            'title_lt' => Yii::t('admin', 'Pavadinimas') . ' ' . Yii::t('admin', '(LT)'),
-            'title_no' => Yii::t('admin', 'Pavadinimas') . ' ' . Yii::t('admin', '(NO)'),
-			'language_id' => 'Language',
+			'title' => 'Title',
+			'value' => 'Value',
+			'employee_id' => 'Employee',
 		);
 	}
 
@@ -83,24 +79,20 @@ class Status extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('title_lt',$this->title_lt,true);
-		$criteria->compare('title_no',$this->title_no,true);
-		$criteria->compare('language_id',$this->language_id);
+		$criteria->compare('title',$this->title,true);
+		$criteria->compare('value',$this->value,true);
+		$criteria->compare('employee_id',$this->employee_id);
 
-        $size = Yii::app()->user->getState('grid');
-        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 10;
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'pagination' => array('pageSize' => $size),
-        ));
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
 	}
 
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Status the static model class
+	 * @return Setting the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

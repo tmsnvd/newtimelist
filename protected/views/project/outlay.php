@@ -1,7 +1,8 @@
 <div class="box box-color box-bordered">
     <div class="box-title">
-        <h3><i class="glyphicon-spade"></i><?php echo Yii::t('admin', 'Projektų'), ' ', Yii::t('admin', 'sąskaitos'); ?>
+        <h3><i class="glyphicon-spade"></i><?php echo Yii::t('admin', 'Projektų'), ' ', Yii::t('admin', 'sąrašas'); ?>
         </h3>
+
         <div class="actions">
             <?php $this->widget('bootstrap.widgets.TopazGridDropDown', array('c' => 'project', 'a' => 'invoice')); ?>
         </div>
@@ -17,8 +18,8 @@
         ");
 
     $this->breadcrumbs = array(
-        Yii::t('admin', 'Projektai') => array('admin'),
-        Yii::t('admin', 'Sąskaitos'),
+        Yii::t('admin', 'Projektai') => array('index'),
+        Yii::t('admin', 'Sąrašas'),
     );
     /*
     $this->menu = array(
@@ -39,8 +40,8 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
-
     ?>
+
     <!--
     <p>
     You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
@@ -48,12 +49,12 @@ $('.search-form form').submit(function(){
     </p>
     -->
 
+
     <div class="search-form" style="display:none">
         <?php $this->renderPartial('_search', array(
             'model' => $model,
         )); ?>
     </div>
-
     <!-- search-form -->
 
     <?php $this->widget('bootstrap.widgets.TbGridView', array(
@@ -70,7 +71,7 @@ $('.search-form form').submit(function(){
         'htmlOptions' => array(
             'class' => 'box-content nopadding',
         ),
-        'rowCssClassExpression' => '($data["is_checkout"] == 1) ? ($data["payment_date"] <= date("Y-m-d")) ? "red" : "blue" : ""',
+        'rowCssClassExpression' => '$data["is_checkout"] ? "" : "red"',
         'afterAjaxUpdate' => 'reinstallDatePicker',
         'itemsCssClass' => 'table table-hover table-nomargin table-bordered dataTable-columnfilter dataTable',
         'columns' => array(
@@ -91,7 +92,6 @@ $('.search-form form').submit(function(){
                 'class' => 'bootstrap.widgets.TbGridColumn',
                 'name' => 'title',
                 'type' => 'html',
-                'filter' => CHtml::listData(Project::model()->findAll(), 'id', 'title'),
                 'value' => function ($data)
                 {
                     return CHtml::link($data->title, CHtml::normalizeUrl(array('/Project/update/' . $data->id)));
@@ -112,7 +112,7 @@ $('.search-form form').submit(function(){
             array(
                 'class' => 'bootstrap.widgets.TbGridColumn',
                 'name' => 'customer_id',
-                'filter' => CHtml::listData(Customer::model()->findAll(), 'id', 'title'),
+                'filter' => CHtml::listData(Project::model()->findAll(), 'id', 'title'),
                 'value' => '$data->customer->title',
                 'headerHtmlOptions' => array(
                     'class' => 'sorting',
@@ -122,17 +122,10 @@ $('.search-form form').submit(function(){
             array(
                 'class' => 'bootstrap.widgets.TbGridColumn',
                 'name' => 'project_end',
-                'headerHtmlOptions' => array(
-                    'class' => 'sorting',
-                    'role' => 'columnheader'
-                ),
-                'filterInputHtmlOptions' => array(
-                    'input_class' => 'datepick',
-                    'input_id' => 'project_end'
-                )),
-            array(
-                'class' => 'bootstrap.widgets.TbGridColumn',
-                'name' => 'payment_date',
+                'value' => function ($data)
+                {
+                    return ($data->project_end === "0000-00-00") ? "" : $data->project_end;
+                },
                 'headerHtmlOptions' => array(
                     'class' => 'sorting',
                     'role' => 'columnheader'
@@ -158,20 +151,6 @@ $('.search-form form').submit(function(){
                 'value' => function ($data)
                 {
                     return ($data->is_checkout == "1") ? 'Taip' : 'Ne';
-                },
-                'headerHtmlOptions' => array(
-                    'class' => 'sorting',
-                    'role' => 'columnheader'
-                )),
-
-            array(
-                'class' => 'bootstrap.widgets.TbGridColumn',
-                'name' => 'is_paid',
-                'type' => 'html',
-                'filter' => CHtml::listData(array(array('id' => 1, 'title' => 'Taip'), array('id' => 0, 'title' => 'Ne')), 'id', 'title'),
-                'value' => function ($data)
-                {
-                    return ($data->is_paid == "1") ? 'Taip' : 'Ne';
                 },
                 'headerHtmlOptions' => array(
                     'class' => 'sorting',

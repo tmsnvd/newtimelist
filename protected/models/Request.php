@@ -90,8 +90,12 @@ class Request extends CActiveRecord
 		$criteria->compare('type_id',$this->type_id);
 		$criteria->compare('description',$this->description,true);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+        $size = Yii::app()->user->getState('grid');
+        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 10;
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array('pageSize' => $size),
+        ));
 	}
 }

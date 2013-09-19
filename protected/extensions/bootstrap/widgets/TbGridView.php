@@ -83,6 +83,7 @@ class TbGridView extends CGridView
      */
     public function renderFilter()
     {
+
         if ($this->filter !== null)
         {
             echo "<tr class=\"{$this->filterCssClass}\">\n";

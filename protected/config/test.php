@@ -16,15 +16,21 @@ return CMap::mergeArray(
                 'enableProfiling' => true,
                 'enableParamLogging' => true
             ),
+            'kint' => array(
+                'class' => 'ext.Kint.Kint',
+            ), /*
             'log' => array(
+
                 'class' => 'CLogRouter',
                 'routes' => array(
                     array(
-                        'class' => 'CFileLogRoute',
-                        'levels' => 'error, warning',
+                        'class' => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                        'ipFilters' => array('127.0.0.1', '87.247.96.77'),
                     )
                 )
-            )
-        )
+
+            ) */
+        ),
+        'preload' => array('log', 'kint')
     )
 );

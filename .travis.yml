@@ -17,6 +17,7 @@ before_script:
   #- php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
   #- echo "zend_extension = Xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - mysql -e 'create database newtimelist_test; use newtimelist_test;'
+  - mysql -e "INSERT INTO `employee` (`name`, `surname`, `address`, `username`, `email`, `usertype`, `password`, `is_active`) VALUES ('Test', 'User', 'a', 'tomnev', 'test@test.lt', 'admin', '$2a$04$NkdHh6Y3xC1z7VXhWwsOne3Mmqy66oS9P/AcWs.txL6G7xRwga1q2', 1)"
   - mysql newtimelist_test < protected/data/newtimelist.sql
 
 script:

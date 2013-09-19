@@ -31,7 +31,7 @@ class ProjectController extends Controller
                 'users' => array('admin'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'invoice'),
+                'actions' => array('create', 'update', 'invoice', 'outlay'),
                 'users' => array('admin'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -67,7 +67,7 @@ class ProjectController extends Controller
     {
         $model = Project::model()->findByPk($id);
         if ($model === null)
-            throw new CHttpException(404, 'The requested page does not exist.');
+            throw new CHttpException(404, 'Užklausa negali būti įvykdyta');
         return $model;
     }
 
@@ -86,7 +86,10 @@ class ProjectController extends Controller
         {
             $model->attributes = $_POST['Project'];
             if ($model->save())
+            {
+                //echo CHttpRequest::getUrlReferrer();
                 $this->redirect(array('admin'));
+            }
         }
 
         $this->render('create', array(
@@ -110,7 +113,10 @@ class ProjectController extends Controller
         {
             $model->attributes = $_POST['Project'];
             if ($model->save())
+            {
+                //d( $this->createUrl(CHttpRequest::getUrlReferrer()) );
                 $this->redirect(array('admin'));
+            }
         }
 
         $this->render('update', array(
@@ -126,7 +132,7 @@ class ProjectController extends Controller
      */
     public function actionDelete($id)
     {
-        if (Yii::app()->request->isPostRequest)
+        //if (Yii::app()->request->isPostRequest)
         {
             // we only allow deletion via POST request
             $this->loadModel($id)->delete();
@@ -134,8 +140,8 @@ class ProjectController extends Controller
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-        } else
-            throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+        } //else
+            //throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
     /**
@@ -166,12 +172,25 @@ class ProjectController extends Controller
      */
     public function actionInvoice()
     {
-        $model = new Project('invoice');
+        $model = new Project();
         $model->unsetAttributes(); // clear any default values
+
         if (isset($_GET['Project']))
             $model->attributes = $_GET['Project'];
 
         $this->render('invoice', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
+     *
+     */
+    public function actionOutlay()
+    {
+        $model = new Project();
+
+        $this->render('outlay', array(
             'model' => $model,
         ));
     }

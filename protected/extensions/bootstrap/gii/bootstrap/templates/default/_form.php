@@ -7,7 +7,7 @@
 
 <?php echo "<?php \$form=\$this->beginWidget('bootstrap.widgets.TbActiveForm',array(
 	'id'=>'".$this->class2id($this->modelClass)."-form',
-	'enableAjaxValidation'=>true,
+	'enableAjaxValidation' => false,
 )); ?>\n"; ?>
 
 	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>

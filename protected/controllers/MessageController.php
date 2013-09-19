@@ -70,7 +70,7 @@ class MessageController extends Controller
         {
             $model->attributes = $_POST['Message'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('create', array(
@@ -94,7 +94,7 @@ class MessageController extends Controller
         {
             $model->attributes = $_POST['Message'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('update', array(
@@ -160,7 +160,7 @@ class MessageController extends Controller
     {
         $model = Message::model()->findByPk($id);
         if ($model === null)
-            throw new CHttpException(404, 'The requested page does not exist.');
+            throw new CHttpException(404, 'Užklausa negali būti įvykdyta');
         return $model;
     }
 

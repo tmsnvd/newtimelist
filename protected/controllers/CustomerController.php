@@ -64,13 +64,13 @@ class CustomerController extends Controller
         $model = new Customer;
 
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $this->performAjaxValidation($model);
 
         if (isset($_POST['Customer']))
         {
             $model->attributes = $_POST['Customer'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('create', array(
@@ -88,13 +88,13 @@ class CustomerController extends Controller
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $this->performAjaxValidation($model);
 
         if (isset($_POST['Customer']))
         {
             $model->attributes = $_POST['Customer'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('update', array(
@@ -109,16 +109,36 @@ class CustomerController extends Controller
      */
     public function actionDelete($id)
     {
-        if (Yii::app()->request->isPostRequest)
+        //if (Yii::app()->request->isPostRequest)
         {
-            // we only allow deletion via POST request
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->setScenario('delete');
+
+            if($model->validate())
+            {
+                $model->delete();
+            }
+            else
+            {
+                $errors = $model->getErrors();
+                $links = array();
+
+                foreach($errors['id'][0] as $e)
+                {
+                    $links[] = CHtml::link($e->title, array('project/admin'));
+                }
+
+                if(count($links) == 1)
+                    Yii::app()->user->setFlash('error', Yii::t('admin', 'Negalima ištrinti kliento, nes jis susietas su projektu: ') . ' ' . implode($links, ',') );
+                elseif(count($links) > 1)
+                    Yii::app()->user->setFlash('error', Yii::t('admin', 'Negalima ištrinti kliento, nes jis susietas su projektais: ') . ' ' . implode($links, ', '));
+            }
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-        } else
-            throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+        } //else
+            //throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
     /**
@@ -137,6 +157,7 @@ class CustomerController extends Controller
      */
     public function actionAdmin()
     {
+
         $model = new Customer('search');
         $model->unsetAttributes(); // clear any default values
         if (isset($_GET['Customer']))
@@ -156,7 +177,7 @@ class CustomerController extends Controller
     {
         $model = Customer::model()->findByPk($id);
         if ($model === null)
-            throw new CHttpException(404, 'The requested page does not exist.');
+            throw new CHttpException(404, 'Užklausa negali būti įvykdyta');
         return $model;
     }
 

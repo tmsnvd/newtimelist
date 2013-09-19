@@ -42,6 +42,83 @@ class SiteController extends Controller
     }
 
     /**
+     * Backup DB
+     */
+    public function actionBackup()
+    {
+        Yii::import('ext.SDatabaseDumper');
+        $dumper = new SDatabaseDumper;
+        // Get path to backup file
+        echo $file = Yii::getPathOfAlias('webroot.protected.data') . DIRECTORY_SEPARATOR . 'dump_' . date('Y-m-d_H_i_s') . '.sql';
+
+        // Gzip dump
+        if (function_exists('gzencode'))
+            file_put_contents($file . '.gz', gzencode($dumper->getDump()));
+        else
+            file_put_contents($file, $dumper->getDump());
+
+        echo "<br>backup done";
+    }
+
+    /**
+     * Lock screen action
+     */
+    public function actionDb()
+    {
+        Yii::app()->db->createCommand("SET FOREIGN_KEY_CHECKS=0;")->execute();
+
+        Yii::app()->db->createCommand()->truncateTable('employee');
+        Yii::app()->db->createCommand()->truncateTable('company');
+        Yii::app()->db->createCommand()->truncateTable('customer');
+        Yii::app()->db->createCommand()->truncateTable('extra_job');
+        Yii::app()->db->createCommand()->truncateTable('job');
+        Yii::app()->db->createCommand()->truncateTable('job_name');
+        Yii::app()->db->createCommand()->truncateTable('language');
+        Yii::app()->db->createCommand()->truncateTable('material');
+        Yii::app()->db->createCommand()->truncateTable('message');
+        Yii::app()->db->createCommand()->truncateTable('month');
+        Yii::app()->db->createCommand()->truncateTable('project');
+        Yii::app()->db->createCommand()->truncateTable('size');
+        Yii::app()->db->createCommand()->truncateTable('status');
+
+        Yii::app()->db->createCommand("SET FOREIGN_KEY_CHECKS=1;")->execute();
+
+        Yii::app()->db->createCommand('INSERT INTO `employee` (`name`, `surname`, `address`, `username`, `email`, `usertype`, `password`, `is_active`) VALUES ("Test", "User", "a", "tomnev", "test@test.lt", "admin", "$2a$04$NkdHh6Y3xC1z7VXhWwsOne3Mmqy66oS9P/AcWs.txL6G7xRwga1q2", "1")')->execute();
+
+        $this->redirect(array("site/login"));
+
+    }
+
+    /**
+     * Limit grid record count
+     */
+    public function actionGrid()
+    {
+        $controller = Yii::app()->request->getParam('c', 'site');
+        $action = Yii::app()->request->getParam('a', 'admin');
+        $count = (int)Yii::app()->request->getPost('count', 50);
+        $userId = Yii::app()->user->getState('id');
+
+        $setting = Setting::model()->find('employee_id=:eid AND title=:title', array(':eid' => $userId, ':title' => $controller . '/' . $action));
+
+        if (!$setting)
+        {
+            $setting = new Setting();
+            $setting->employee_id = $userId;
+            $setting->title = $controller . '/' . $action;
+        }
+
+        $setting->value = $count;
+        $setting->save();
+
+        $grid = Yii::app()->user->getState('grid');
+        $grid[$controller. '/' . $action] = $count;
+        Yii::app()->user->setState('grid', $grid);
+
+        $this->redirect(array($controller . '/' . $action));
+    }
+
+    /**
      * Lock screen action
      */
     public function actionLock()

@@ -13,6 +13,7 @@ return array(
     'theme' => 'flat',
     'sourceLanguage' => 'lt',
     'language' => 'lt',
+    'charset' => 'utf-8',
     // preloading 'log' component
     'preload' => array(
         'log',
@@ -23,9 +24,11 @@ return array(
         'application.models.*',
         'application.components.*',
         'ext.giix.components.*', // giix components
+        'application.extensions.CAdvancedArBehavior'
     ),
 
     'modules' => array( // uncomment the following to enable the Gii tool
+        'backup' => array('path' => __DIR__ . '/../data/'),
         'gii' => array(
             'class' => 'system.gii.GiiModule',
             'password' => 'qweasd',
@@ -49,6 +52,12 @@ return array(
             'autoRenewCookie' => true,
             'authTimeout' => 60 * 60 * 1,
             'absoluteAuthTimeout' => 60 * 60 * 12
+        ),
+        'dropbox' => array(
+            'class' => 'ext.YiiDropbox.YiiDropbox',
+            'appKey' => 's7egcd81uco6629',
+            'appSecret' => 'jmubixra2zfl21o',
+            'root' => 'dropbox' //or 'sandbox'
         ),
         'bootstrap' => array(
             'class' => 'bootstrap.components.Bootstrap',
