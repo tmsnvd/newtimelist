@@ -62,6 +62,7 @@ class Controller extends CController
             case "invoice":
             case "admin":
             case "outlay":
+            case "worker":
 
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.core.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.datepicker.min.js');
@@ -72,6 +73,7 @@ class Controller extends CController
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.sortable.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.resizable.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'nicescroll/jquery.nicescroll.min.js');
+                $cs->registerScriptFile($baseUrl . $js . 'maskedinput/jquery.maskedinput.min.js');
 
                 $cs->registerCssFile($baseUrl . $css . 'datepicker/datepicker.css');
 
@@ -95,6 +97,7 @@ class Controller extends CController
 
             case "update":
             case "create":
+            case "not":
 
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.core.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.datepicker.min.js');
@@ -107,6 +110,7 @@ class Controller extends CController
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.sortable.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'jquery-ui/jquery.ui.resizable.min.js');
                 $cs->registerScriptFile($baseUrl . $js . 'nicescroll/jquery.nicescroll.min.js');
+                $cs->registerScriptFile($baseUrl . $js . 'maskedinput/jquery.maskedinput.min.js');
 
                 $cs->registerCssFile($baseUrl . $css . 'datepicker/datepicker.css');
                 $cs->registerCssFile($baseUrl . $css . 'daterangepicker/daterangepicker.css');

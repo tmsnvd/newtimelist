@@ -31,7 +31,7 @@ class JobController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update', 'worker', 'ajaxGetUnit', 'not'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -68,16 +68,62 @@ class JobController extends Controller
 
         if (isset($_POST['Job']))
         {
-            $model->attributes = $_POST['Job'];
-            $model->employee_id = Yii::app()->user->getState('id');
-
-            $model->setJobNames(Yii::app()->request->getPost('jobName', array()));
-            $model->setMaterials(Yii::app()->request->getPost('material', array()));
-            $model->setExtraJobs(Yii::app()->request->getPost('extraJob', array()));
-
-            if ($model->save())
+            $connection = Yii::app()->db;
+            $transaction = $connection->beginTransaction();
+            try
             {
-                $this->redirect(array('admin'));
+                $model->attributes = $_POST['Job'];
+                $model->employee_id = Yii::app()->user->getState('id');
+
+                $jobNames = Yii::app()->request->getPost('jobNames', array());
+                $cleanNames = array();
+                foreach ($jobNames as $name)
+                {
+                    if($name[0] != '')
+                        $cleanNames[] = $name;
+                }
+
+                $jobNames2 = Yii::app()->request->getPost('jobNames2', array());
+                $cleanNames2 = array();
+                foreach ($jobNames2 as $name)
+                {
+                    if($name[0] != '')
+                        $cleanNames2[] = $name;
+                }
+
+                $model->jobNames = $cleanNames + $cleanNames2;
+
+                $materials = Yii::app()->request->getPost('materials', array());
+                $cleanMaterials = array();
+                foreach ($materials as $name)
+                {
+                    if($name[0] != '')
+                        $cleanMaterials[] = $name;
+                }
+                $model->materials = $cleanMaterials;
+
+                $extraJob = Yii::app()->request->getPost('extraJobs', array());
+                $cleanJobs = array();
+                foreach ($extraJob as $name)
+                {
+                    if($name[0] != '')
+                        $cleanJobs[] = $name;
+                }
+                $model->extraJobs = $cleanJobs;
+
+                if ($model->save())
+                {
+                    //$transaction->rollback();
+                    $transaction->commit();
+                    $type = Yii::app()->user->getId();
+                    $this->redirect(array($type));
+                }
+            }
+            catch (Exception $e)
+            {
+                d($e);
+                d($e);
+                $transaction->rollback();
             }
         }
 
@@ -92,19 +138,24 @@ class JobController extends Controller
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
+     * @throws CHttpException
      */
     public function actionUpdate($id)
     {
-        $model = $this->loadModel($id);
+        $model = Job::model()->with('nameValue', 'jobNameValues')->findByPk($id); //$this->loadModel($id);
 
-        // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        if($model->employee_id != Yii::app()->user->getState('id'))
+        {
+            if(Yii::app()->user->getId() != "admin")
+                throw new CHttpException(404, 'Not your job!');
+        }
 
         if (isset($_POST['Job']))
         {
             $model->attributes = $_POST['Job'];
+
             if ($model->save())
-                $this->redirect(array('admin', 'id' => $model->id));
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         }
 
         $this->render('update', array(
@@ -116,31 +167,23 @@ class JobController extends Controller
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
+     * @throws CHttpException
      */
     public function actionDelete($id)
     {
-        //if(Yii::app()->request->isPostRequest)
+        $model = $this->loadModel($id);
+
+        if($model->employee_id != Yii::app()->user->getState('id'))
         {
-            // we only allow deletion via POST request
-            $this->loadModel($id)->delete();
-
-            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            if (!isset($_GET['ajax']))
-                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            if(Yii::app()->user->getId() != "admin")
+                throw new CHttpException(404, 'Not your job!');
         }
-        //else
-        //throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-    }
 
-    /**
-     * Lists all models.
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new CActiveDataProvider('Job');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
+        $model->delete();
+
+        if (!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+
     }
 
     /**
@@ -150,10 +193,55 @@ class JobController extends Controller
     {
         $model = new Job('search');
         $model->unsetAttributes(); // clear any default values
+
         if (isset($_GET['Job']))
             $model->attributes = $_GET['Job'];
 
         $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
+     * Manages all models.
+     */
+    public function actionWorker()
+    {
+        $model = new Job('search');
+        $model->unsetAttributes(); // clear any default values
+
+        if (isset($_GET['Job']))
+            $model->attributes = $_GET['Job'];
+
+        $model->employee_id = Yii::app()->user->getState('id');
+
+        $this->render('worker', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
+     * @todo Tą dieną, kai nedirbama, negalima pildyti darbų
+     */
+    public function actionNot()
+    {
+        $model = new Job();
+        $model->unsetAttributes(); // clear any default values
+
+        if (isset($_POST['Job']))
+        {
+            $model->attributes = $_POST['Job'];
+            $model->employee_id = Yii::app()->user->getState('id');
+            $model->project_id = 187; //187
+            $model->created = date("d.m.Y");
+            $model->work_start = "00:00";
+            $model->work_end = "00:00";
+
+            if ($model->save())
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('worker'));
+        }
+
+        $this->render('not', array(
             'model' => $model,
         ));
     }
@@ -169,11 +257,13 @@ class JobController extends Controller
      */
     public function loadModel($id)
     {
-        $model = Job::model()->findByPk($id);
+        $model = Job::model()->with(array('jobNames', 'materials', 'extraJobs'))->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'Užklausa negali būti įvykdyta');
         return $model;
     }
+
+
 
     /**
      * Performs the AJAX validation.

@@ -85,6 +85,12 @@ class ProjectController extends Controller
         if (isset($_POST['Project']))
         {
             $model->attributes = $_POST['Project'];
+            if($model->is_checkout == 0)
+            {
+                $model->is_paid == 0;
+                $model->payment_date = null;
+            }
+
             if ($model->save())
             {
                 //echo CHttpRequest::getUrlReferrer();
@@ -112,9 +118,16 @@ class ProjectController extends Controller
         if (isset($_POST['Project']))
         {
             $model->attributes = $_POST['Project'];
+
+            if($model->is_checkout == 0)
+            {
+                $model->is_paid == 0;
+                $model->payment_date = null;
+            }
+
             if ($model->save())
             {
-                //d( $this->createUrl(CHttpRequest::getUrlReferrer()) );
+                //d( CHttpRequest::getUrlReferrer() );
                 $this->redirect(array('admin'));
             }
         }
@@ -172,12 +185,11 @@ class ProjectController extends Controller
      */
     public function actionInvoice()
     {
-        $model = new Project();
+        $model = new Project('invoice');
         $model->unsetAttributes(); // clear any default values
 
         if (isset($_GET['Project']))
             $model->attributes = $_GET['Project'];
-
         $this->render('invoice', array(
             'model' => $model,
         ));
@@ -188,7 +200,11 @@ class ProjectController extends Controller
      */
     public function actionOutlay()
     {
-        $model = new Project();
+        $model = new Project('outlay');
+        $model->unsetAttributes(); // clear any default values
+
+        if (isset($_GET['Project']))
+            $model->attributes = $_GET['Project'];
 
         $this->render('outlay', array(
             'model' => $model,

@@ -2,6 +2,7 @@
     <div class="box-title">
         <h3><i class="glyphicon-spade"></i><?php echo Yii::t('admin', 'Projektų'), ' ', Yii::t('admin', 'sąskaitos'); ?>
         </h3>
+
         <div class="actions">
             <?php $this->widget('bootstrap.widgets.TopazGridDropDown', array('c' => 'project', 'a' => 'invoice')); ?>
         </div>
@@ -56,12 +57,13 @@ $('.search-form form').submit(function(){
 
     <!-- search-form -->
 
-    <?php $this->widget('bootstrap.widgets.TbGridView', array(
-        'id' => 'project-grid',
+    <?php $this->widget('ext.groupgridview.BootGroupGridView', array(
+        'id' => 'invoice-grid',
         'ajaxUpdate' => false,
-        'template' => '<div class="table table-nomargin table-condensed table-bordered dataTable">{items}{pager}{summary}</div>',
+        'template' => '<div class="table table-nomargin table-condensed table-bordered dataTable dataTable-scroll-y">{items}{pager}{summary}</div>',
         'dataProvider' => $model->invoice(),
         'filter' => $model,
+        'mergeColumns' => array('priority'),
         'filterCssClass' => 'thefilter',
         'summaryCssClass' => 'table-pagination',
         'pagerCssClass' => 'table-pagination',
@@ -70,31 +72,33 @@ $('.search-form form').submit(function(){
         'htmlOptions' => array(
             'class' => 'box-content nopadding',
         ),
-        'rowCssClassExpression' => '($data["is_checkout"] == 1) ? ($data["payment_date"] <= date("Y-m-d")) ? "red" : "blue" : ""',
+        'rowCssClassExpression' => '$data->getCssClass()', //
         'afterAjaxUpdate' => 'reinstallDatePicker',
         'itemsCssClass' => 'table table-hover table-nomargin table-bordered dataTable-columnfilter dataTable',
         'columns' => array(
             array(
                 'class' => 'bootstrap.widgets.TbGridColumn',
-                'name' => 'pid',
-                'type' => 'html',
-                'value' => function ($data)
-                {
-                    return CHtml::link($data->pid, CHtml::normalizeUrl(array('/Project/update/' . $data->id)));
-                },
+                'name' => 'priority',
+                'filter' => false,
                 'headerHtmlOptions' => array(
                     'class' => 'sorting',
                     'role' => 'columnheader'
                 )),
-
+            array(
+                'class' => 'bootstrap.widgets.TbGridColumn',
+                'name' => 'pid',
+                'headerHtmlOptions' => array(
+                    'class' => 'sorting',
+                    'role' => 'columnheader'
+                )),
             array(
                 'class' => 'bootstrap.widgets.TbGridColumn',
                 'name' => 'title',
-                'type' => 'html',
-                'filter' => CHtml::listData(Project::model()->findAll(), 'id', 'title'),
+                'filter' => CHtml::listData($model->findAll(), 'id', 'title'),
+                'type' => 'raw',
                 'value' => function ($data)
                 {
-                    return CHtml::link($data->title, CHtml::normalizeUrl(array('/Project/update/' . $data->id)));
+                    return CHtml::link($data->title, CHtml::normalizeUrl(array('/Project/update/' . $data->id . '/redirect/invoice')));
                 },
                 'headerHtmlOptions' => array(
                     'class' => 'sorting',
@@ -153,7 +157,6 @@ $('.search-form form').submit(function(){
             array(
                 'class' => 'bootstrap.widgets.TbGridColumn',
                 'name' => 'is_checkout',
-                'type' => 'html',
                 'filter' => CHtml::listData(array(array('id' => 1, 'title' => 'Taip'), array('id' => 0, 'title' => 'Ne')), 'id', 'title'),
                 'value' => function ($data)
                 {
@@ -163,7 +166,6 @@ $('.search-form form').submit(function(){
                     'class' => 'sorting',
                     'role' => 'columnheader'
                 )),
-
             array(
                 'class' => 'bootstrap.widgets.TbGridColumn',
                 'name' => 'is_paid',
@@ -177,7 +179,6 @@ $('.search-form form').submit(function(){
                     'class' => 'sorting',
                     'role' => 'columnheader'
                 )),
-
 
             array(
                 'class' => 'bootstrap.widgets.TbButtonColumn',

@@ -85,7 +85,7 @@ class JobName extends CActiveRecord
         $criteria->compare('unit', $this->unit, true);
 
         $size = Yii::app()->user->getState('grid');
-        $size = isset($size['jobName/admin']) ? $size['jobName/admin'] : 10;
+        $size = isset($size['jobName/admin']) ? $size['jobName/admin'] : 25;
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

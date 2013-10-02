@@ -159,10 +159,13 @@ class Employee extends CActiveRecord
         $criteria->compare('coat_size_id', $this->coat_size_id);
 
         $Size = Yii::app()->user->getState('grid');
-        $Size = isset($Size[$this->tableName() . '/admin']) ? $Size[$this->tableName() . '/admin'] : 10;
+        $Size = isset($Size[$this->tableName() . '/admin']) ? $Size[$this->tableName() . '/admin'] : 25;
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'usertype',
+            ),
             'pagination' => array('pageSize' => $Size),
         ));
     }

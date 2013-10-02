@@ -77,123 +77,182 @@
 
 class CAdvancedArbehavior extends CActiveRecordBehavior
 {
-	// Set this to false to disable tracing of changes
-	public $trace = true;
+    // Set this to false to disable tracing of changes
+    public $trace = true;
 
-	// If you want to ignore some relations, set them here.
-	public $ignoreRelations = array();
+    // If you want to ignore some relations, set them here.
+    public $ignoreRelations = array();
 
-	// After the save process of the model this behavior is attached to 
-	// is finished, we begin saving our MANY_MANY related data 
-	public function afterSave($event) 
-	{
-		if(!is_array($this->ignoreRelations))
-			throw new CException('ignoreRelations of CAdvancedArBehavior needs to be an array');
+    /**
+     * @param CEvent $event
+     * @return bool|void
+     */
+    public function beforeFind($event)
+    {
+        /*
+        foreach ($this->getRelations() as $relation)
+        {
+            foreach ($this->owner->relations() as $key => $relation)
+            {
 
-		$this->writeManyManyTables();
-		parent::afterSave($event);
-		return true;
-	}
+            }
+        }
 
-	protected function writeManyManyTables() 
-	{
-		if($this->trace)
-			Yii::trace('writing MANY_MANY data for '.get_class($this->owner),
-					'system.db.ar.CActiveRecord');
+        $owner = $this->getOwner();
+        $owner->value = 100;
 
-		foreach($this->getRelations() as $relation) 
-		{
-			$this->cleanRelation($relation);
-			$this->writeRelation($relation);
-		}
-	}
+        parent::beforeFind($event);
+        return true;
+        */
+    }
 
-	/* A relation will have the following format:
-	 $relation['m2mTable'] = the tablename of the foreign object
-	 $relation['m2mThisField'] = the column in the many2many table that represents the primary Key of the object that this behavior is attached to
-	 $relation['m2mForeignField'] = the column in the many2many table that represents the foreign object. 
+    // After the save process of the model this behavior is attached to
+    // is finished, we begin saving our MANY_MANY related data
+    public function afterSave($event)
+    {
+        if (!is_array($this->ignoreRelations))
+            throw new CException('ignoreRelations of CAdvancedArBehavior needs to be an array');
+
+        $this->writeManyManyTables();
+        parent::afterSave($event);
+        return true;
+    }
+
+    protected function writeManyManyTables()
+    {
+        if ($this->trace)
+            Yii::trace('writing MANY_MANY data for ' . get_class($this->owner),
+                'system.db.ar.CActiveRecord');
+
+        foreach ($this->getRelations() as $relation)
+        {
+            $this->cleanRelation($relation);
+            $this->writeRelation($relation);
+        }
+    }
+
+    /* A relation will have the following format:
+     $relation['m2mTable'] = the tablename of the foreign object
+     $relation['m2mThisField'] = the column in the many2many table that represents the primary Key of the object that this behavior is attached to
+     $relation['m2mForeignField'] = the column in the many2many table that represents the foreign object.
 
   Written in Yii relation syntax, it would be like this
-		'relationname' => array('foreignobject', 'column', 'm2mTable(m2mThisField, m2mForeignField) */
-	protected function getRelations()
-	{
-		$relations = array();
+        'relationname' => array('foreignobject', 'column', 'm2mTable(m2mThisField, m2mForeignField) */
+    protected function getRelations()
+    {
+        $relations = array();
 
-		foreach ($this->owner->relations() as $key => $relation) 
-		{
-			if ($relation[0] == CActiveRecord::MANY_MANY && 
-					!in_array($key, $this->ignoreRelations) &&
-					$this->owner->hasRelated($key) && 
-					$this->owner->$key != -1)
-			{
-				$info = array();
-				$info['key'] = $key;
-				$info['foreignTable'] = $relation[1];
+        foreach ($this->owner->relations() as $key => $relation)
+        {
+            if ($relation[0] == CActiveRecord::MANY_MANY &&
+                !in_array($key, $this->ignoreRelations) &&
+                $this->owner->hasRelated($key) &&
+                $this->owner->$key != -1
+            )
+            {
+                $info = array();
+                $info['key'] = $key;
+                $info['foreignTable'] = $relation[1];
 
-					if (preg_match('/^(.+)\((.+)\s*,\s*(.+)\)$/s', $relation[2], $pocks)) 
-					{
-						$info['m2mTable'] = $pocks[1];
-						$info['m2mThisField'] = $pocks[2];
-						$info['m2mForeignField'] = $pocks[3];
-					}
-					else 
-					{
-						$info['m2mTable'] = $relation[2];
-						$info['m2mThisField'] = $this->owner->tableSchema->PrimaryKey;
-						$info['m2mForeignField'] = CActiveRecord::model($relation[1])->tableSchema->primaryKey;
-					}
-				$relations[$key] = $info;
-			}
-		}
-		return $relations;
-	}
+                if (preg_match('/^(.+)\((.+)\s*,\s*(.+)\)$/s', $relation[2], $pocks))
+                {
+                    $info['m2mTable'] = $pocks[1];
+                    $info['m2mThisField'] = $pocks[2];
+                    $info['m2mForeignField'] = $pocks[3];
+                } else
+                {
+                    $info['m2mTable'] = $relation[2];
+                    $info['m2mThisField'] = $this->owner->tableSchema->PrimaryKey;
+                    $info['m2mForeignField'] = CActiveRecord::model($relation[1])->tableSchema->primaryKey;
+                }
+                $relations[$key] = $info;
+            }
+        }
+        return $relations;
+    }
 
-	/** writeRelation's job is to check if the user has given an array or an 
-	 * single Object, and executes the needed query */
-	protected function writeRelation($relation) 
-	{
-		$key = $relation['key'];
+    /** writeRelation's job is to check if the user has given an array or an
+     * single Object, and executes the needed query */
+    protected function writeRelation($relation)
+    {
+        $key = $relation['key'];
 
-		// Only an object or primary key id is given
-		if(!is_array($this->owner->$key) && $this->owner->$key != array()) 		
-			$this->owner->$key = array($this->owner->$key);
+        // Only an object or primary key id is given
+        if (!is_array($this->owner->$key) && $this->owner->$key != array())
+            $this->owner->$key = array($this->owner->$key);
 
-		// An array of objects is given
-		foreach((array)$this->owner->$key as $foreignobject)
-		{
-			if(!is_numeric($foreignobject) && is_object($foreignobject))
-				$foreignobject = $foreignobject->{$foreignobject->$relation['m2mForeignField']};
-			$this->execute(
-					$this->makeManyManyInsertCommand($relation, $foreignobject));
-		}
-	}
+        // An array of objects is given
+        foreach ((array)$this->owner->$key as $foreignobject)
+        {
+            if(is_array($foreignobject))
+            {
+                $this->execute($this->makeManyManyInsertCommandWithUnit($relation, $foreignobject));
+            }
+            else
+            {
+            if (!is_numeric($foreignobject) && is_object($foreignobject))
+                $foreignobject = $foreignobject->{$foreignobject->$relation['m2mForeignField']};
 
-	/* before saving our relation data, we need to clean up exsting relations so
-	 * they are synchronized */
-	protected function cleanRelation($relation)
-	{
-		$this->execute($this->makeManyManyDeleteCommand($relation));	
-	}
+                $this->execute($this->makeManyManyInsertCommand($relation, $foreignobject));
+            }
+        }
+    }
 
-	// A wrapper function for execution of SQL queries
-	public function execute($query) {
-		return Yii::app()->db->createCommand($query)->execute();
-	}
+    /* before saving our relation data, we need to clean up exsting relations so
+     * they are synchronized */
+    protected function cleanRelation($relation)
+    {
+        $this->execute($this->makeManyManyDeleteCommand($relation));
+    }
 
-	public function makeManyManyInsertCommand($relation, $value) {
-		return sprintf("insert into %s (%s, %s) values ('%s', '%s')",
-				$relation['m2mTable'],
-				$relation['m2mThisField'],
-				$relation['m2mForeignField'],
-				$this->owner->{$this->owner->tableSchema->primaryKey},
-				$value);
-	}
+    // A wrapper function for execution of SQL queries
+    public function execute($query)
+    {
+        return Yii::app()->db->createCommand($query)->execute();
+    }
 
-	public function makeManyManyDeleteCommand($relation) {
-		return sprintf("delete ignore from %s where %s = '%s'",
-				$relation['m2mTable'],
-				$relation['m2mThisField'],
-				$this->owner->{$this->owner->tableSchema->primaryKey}
-				);
-	}
+    /**
+     * @param $relation
+     * @param $value
+     * @return string
+     */
+    public function makeManyManyInsertCommand($relation, $value)
+    {
+        return sprintf("insert into %s (%s, %s) values ('%s', '%s')",
+            $relation['m2mTable'],
+            $relation['m2mThisField'],
+            $relation['m2mForeignField'],
+            $this->owner->{$this->owner->tableSchema->primaryKey},
+            $value);
+    }
+
+    /**
+     * @param $relation
+     * @param $value
+     * @return string
+     */
+    public function makeManyManyInsertCommandWithUnit($relation, $value)
+    {
+        return sprintf("insert into %s (%s, %s, `value`) values ('%s', '%s', '%s')",
+            $relation['m2mTable'],
+            $relation['m2mThisField'],
+            $relation['m2mForeignField'],
+            $this->owner->{$this->owner->tableSchema->primaryKey},
+            $value[0],
+            $value[1]
+        );
+    }
+
+    /**
+     * @param $relation
+     * @return string
+     */
+    public function makeManyManyDeleteCommand($relation)
+    {
+        return sprintf("delete ignore from %s where %s = '%s'",
+            $relation['m2mTable'],
+            $relation['m2mThisField'],
+            $this->owner->{$this->owner->tableSchema->primaryKey}
+        );
+    }
 }

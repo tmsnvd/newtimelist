@@ -94,7 +94,7 @@ class Message extends CActiveRecord
         $criteria->compare('employee_id', $this->employee_id);
 
         $size = Yii::app()->user->getState('grid');
-        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 10;
+        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 25;
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

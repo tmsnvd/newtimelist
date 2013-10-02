@@ -45,6 +45,9 @@ return array(
 
     // application components
     'components' => array(
+        'cache' => array(
+            'class' => 'CApcCache',
+        ),
         'user' => array(
             // enable cookie-based authentication
             'class' => 'WebUser',
@@ -83,8 +86,8 @@ return array(
             'username' => 'dev',
             'password' => 'dev',
             'charset' => 'utf8',
-            'enableProfiling' => true,
-            'enableParamLogging' => true
+            'enableProfiling' => false,
+            'enableParamLogging' => false
         ),
 
         'errorHandler' => array(
@@ -92,13 +95,13 @@ return array(
             'errorAction' => 'site/error',
         ),
         /*
-        'messages' => array (
+        'messages' => array(
             // Pending on core: http://code.google.com/p/yii/issues/detail?id=2624
             'extensionBasePaths' => array(
                 'giix' => 'ext.giix.messages', // giix messages directory.
             ),
         ),
-
+        *//*
         'log' => array(
             'class' => 'CLogRouter',
             'routes' => array(
@@ -106,22 +109,21 @@ return array(
                     'class' => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
                     'ipFilters' => array('127.0.0.1', '87.247.96.77'),
                 ),
+            ),
+
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+                // uncomment the following to show log messages on web pages
+
+                array(//'class' => 'CWebLogRoute',
                 ),
 
-               'class' => 'CLogRouter',
-               'routes' => array(
-                   array(
-                       'class' => 'CFileLogRoute',
-                       'levels' => 'error, warning',
-                   ),*/
-        // uncomment the following to show log messages on web pages
-        /*
-        array(
-            //'class' => 'CWebLogRoute',
-        ),
-
-    ),
-),  */
+            ),
+        ),*/
     ),
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']

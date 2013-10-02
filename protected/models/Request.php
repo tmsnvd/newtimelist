@@ -91,7 +91,7 @@ class Request extends CActiveRecord
 		$criteria->compare('description',$this->description,true);
 
         $size = Yii::app()->user->getState('grid');
-        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 10;
+        $size = isset($size[$this->tableName() . '/admin']) ? $size[$this->tableName() . '/admin'] : 25;
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
